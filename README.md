@@ -1,8 +1,10 @@
-# Bankin web scrapping challenge
+# Bankin web scraping challenge
 
-Projet destiné au concours de web scrapping [Bankin](https://blog.bankin.com/challenge-engineering-web-scrapping-dc5839543117).
+Projet destiné au concours de web scraping [Bankin](https://blog.bankin.com/challenge-engineering-web-scrapping-dc5839543117).
 
-Ce script utilise la librairie [pupeteer](https://blog.bankin.com/challenge-engineering-web-scrapping-dc5839543117() (de l'équipe Chrome DevTools) pour scraper le site du concours Bankin afin d'en extraire la liste des transactions bancaires.
+Ce script utilise la librairie [puppeteer](https://github.com/GoogleChrome/puppeteer) (de l'équipe Chrome DevTools) pour scraper le site du concours Bankin afin d'en extraire la liste des transactions bancaires.
+
+Testé sur Node.js 8.8.
 
 ## Utilisation
 
