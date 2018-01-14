@@ -18,6 +18,11 @@ var transactions = [];
   const browser = await puppeteer.launch({headless: headlessMode});
   const page = await browser.newPage();
 
+  page.on('dialog', async dialog => {
+    logger.log('debug', 'Apparition d\'un dialogue...fermeture');
+    await dialog.dismiss();
+  });
+
   logger.log('debug', 'Ouverture de https://web.bankin.com/challenge/index.html');
   await page.goto('https://web.bankin.com/challenge/index.html');
 
