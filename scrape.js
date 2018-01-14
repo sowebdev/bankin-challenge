@@ -1,5 +1,7 @@
 const puppeteer = require('puppeteer');
 const logger = require('winston');
+// const targetUrl = 'https://web.bankin.com/challenge/index.html';
+const targetUrl = 'file:///C:/Users/AlSo/Downloads/cas-ideal.html';
 const maxTimeout = 1000;
 var headlessMode = true;
 if (process.env.hasOwnProperty('DISABLE_HEADLESS')
@@ -24,15 +26,29 @@ var transactions = [];
     await dialog.dismiss();
   });
 
-  logger.log('debug', 'Ouverture de https://web.bankin.com/challenge/index.html');
-  await page.goto('https://web.bankin.com/challenge/index.html');
+  logger.log('debug', 'Ouverture de ' + targetUrl);
+  await page.goto(targetUrl);
 
-  page.waitForSelector('#dvTable table tr', {timeout: maxTimeout})
-    .then(function () {
-      logger.log('debug', 'TODO compter les lignes');
-    }, function () {
-      logger.log('debug', 'TODO gérer quand ce n\'est pas le cas idéal');
-    });
+  var transactionRows = await page.$$('#dvTable table tr');
+
+  if (transactionRows.length) {
+    logger.log('debug', 'Lignes trouvées');
+
+    // TODO séparer amount et currency
+    for (var i = 0; i < transactionRows.length; i++) {
+      var row = transactionRows[i];
+      var val = await page.evaluate(row => {
+        return {
+          account: row.children[0].innerText,
+          transaction: row.children[1].innerText,
+          amount: row.children[2].innerText,
+          currency: row.children[2].innerText,
+        };
+      }, row);
+      logger.log('debug', val);
+    }
+
+  }
 
   logger.log('debug', 'Fin du script');
 
