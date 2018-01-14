@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const logger = require('winston');
+const maxTimeout = 1000;
 var headlessMode = true;
 if (process.env.hasOwnProperty('DISABLE_HEADLESS')
   && process.env.DISABLE_HEADLESS == 1) {
@@ -26,7 +27,18 @@ var transactions = [];
   logger.log('debug', 'Ouverture de https://web.bankin.com/challenge/index.html');
   await page.goto('https://web.bankin.com/challenge/index.html');
 
+  page.waitForSelector('#dvTable table tr', {timeout: maxTimeout})
+    .then(function () {
+      logger.log('debug', 'TODO compter les lignes');
+    }, function () {
+      logger.log('debug', 'TODO gérer quand ce n\'est pas le cas idéal');
+    });
+
   logger.log('debug', 'Fin du script');
-  await browser.close();
-  console.log(JSON.stringify(transactions));
+
+  // TODO supprimer délai quand terminé
+  setTimeout(function () {
+    browser.close();
+    console.log(JSON.stringify(transactions));
+  }, 500);
 })();
