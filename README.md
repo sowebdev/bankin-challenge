@@ -9,7 +9,7 @@ Testé sur Node.js 8.8.
 ## Utilisation
 
     npm install
-    node scrape.js
+    node main.js
 
 ## Désactivation du mode headless
 
