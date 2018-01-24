@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const logger = require('winston');
 // const targetUrl = 'https://web.bankin.com/challenge/index.html';
-const targetUrl = 'file:///C:/Users/AlSo/projects/bankin-challenge/sample/cas-ideal-fin.html';
+const targetUrl = 'file:///C:/Users/AlSo/projects/bankin-challenge/sample/cas-ideal.html';
 var headlessMode = true;
 if (process.env.hasOwnProperty('DISABLE_HEADLESS') && process.env.DISABLE_HEADLESS == 1) {
   headlessMode = false;

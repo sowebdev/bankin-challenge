@@ -8,16 +8,31 @@ class Crawler {
     this.threads = 1;
     this.offsetParam = 'start';
     this.step = 50;
+    this.latestOffset = null;
+    this.targetUrl = null;
+  }
+
+  nextOffset() {
+    if (this.latestOffset === null) {
+        this.latestOffset = 0;
+    } else {
+      this.latestOffset += this.step;
+    }
+    return this.latestOffset;
+  }
+
+  completeUrl(url) {
+    return url + '?' + this.offsetParam + '=' + this.nextOffset();
   }
 
   async run(targetUrl) {
+    this.targetUrl = targetUrl;
     for (let i = 0; i < this.threads; i++) {
-      let offset = i * this.step;
-      this.crawl(targetUrl + '?' + this.offsetParam + '=' + offset);
+      this.crawl(this.completeUrl(this.targetUrl));
     }
   }
 
-  async crawl(targetUrl) {
+  async crawl(url) {
     const self = this;
     const page = await this.browser.newPage();
     this.openPages++;
@@ -27,8 +42,8 @@ class Crawler {
       await dialog.dismiss();
     });
 
-    this.logger.log('debug', 'Ouverture de ' + targetUrl);
-    await page.goto(targetUrl);
+    this.logger.log('debug', 'Ouverture de ' + url);
+    await page.goto(url);
 
     var transactionRows = await page.$$('#dvTable table tr');
 
@@ -65,8 +80,9 @@ class Crawler {
       }
 
       if (transactionRows.length > 1) {
-        // TODO gérer page suivante
         this.logger.log('debug', 'Prêt pour la page suivante');
+        page.close();
+        this.crawl(this.completeUrl(this.targetUrl));
       } else {
         page.close().then(function () {
           self.openPages--;
