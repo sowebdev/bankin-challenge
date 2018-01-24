@@ -4,8 +4,8 @@ class Crawler {
     this.browser = browser;
     this.storage = storage;
     this.logger = logger;
-    this.openPages = 0;
-    this.threads = 1;
+    this.threads = 5;
+    this.openThreads = 0;
     this.offsetParam = 'start';
     this.step = 50;
     this.latestOffset = null;
@@ -28,6 +28,7 @@ class Crawler {
   async run(targetUrl) {
     this.targetUrl = targetUrl;
     for (let i = 0; i < this.threads; i++) {
+      this.openThreads++;
       this.crawl(this.completeUrl(this.targetUrl));
     }
   }
@@ -35,7 +36,6 @@ class Crawler {
   async crawl(url) {
     const self = this;
     const page = await this.browser.newPage();
-    this.openPages++;
 
     page.on('dialog', async dialog => {
       self.logger.log('debug', 'Apparition d\'un dialogue...fermeture');
@@ -81,20 +81,17 @@ class Crawler {
 
       if (transactionRows.length > 1) {
         this.logger.log('debug', 'Prêt pour la page suivante');
-        page.close();
+        await page.close();
         this.crawl(this.completeUrl(this.targetUrl));
       } else {
-        page.close().then(function () {
-          self.openPages--;
-          if (self.openPages == 0) {
-            self.logger.log('debug', 'Fin du script');
-            // TODO trouver pk parfois plusieurs tableaux sont retournés
-            // et pk le navigateur est déjà fermé
-              self.browser.close().then(function () {
-                console.log(JSON.stringify(self.storage.getTransactions()));
-              });
-          }
-        });
+        await page.close();
+        self.openThreads--;
+        if (self.openThreads == 0) {
+          self.logger.log('debug', 'Fin du script');
+          self.browser.close().then(function () {
+            console.log(JSON.stringify(self.storage.getTransactions()));
+          });
+        }
       }
 
     }
