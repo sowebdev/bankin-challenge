@@ -13,12 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/sowebdev/bankin-challenge.git"
+    "url": "git+ssh://git@github.com/sowebdev/bankin-challenge.git"
   },
   "author": "Sören Ohnmeiss",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/sowebdev/bankin-challenge/issues"
+    "url": "https://github.com/sowebdev/bankin-challenge/issues"
   },
-  "homepage": "https://gitlab.com/sowebdev/bankin-challenge#README"
+  "homepage": "https://github.com/sowebdev/bankin-challenge#README"
 }
