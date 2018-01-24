@@ -19,6 +19,12 @@ Pour faciliter le débuggage et désactiver le mode headless, mettre la variable
 
 Les logs sont écrits dans un fichier _debug.log_ durant l'exécution du script.
 
+## Objectif
+
+5000 transactions en tout
+50 résultats par page donc 100 pages
+Objectif max 10s par page donc 1000 secondes = 17 minutes MAX
+
 ## Infos à retenir
 
 Page valide, sans iframe
