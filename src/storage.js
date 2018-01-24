@@ -2,6 +2,7 @@ class TransactionStorage {
 
   constructor() {
     this.transactions = [];
+    this.transactionKeys = [];
   }
 
   getTransactions() {
@@ -9,7 +10,10 @@ class TransactionStorage {
   }
 
   addTransaction(transaction) {
-    this.transactions.push(transaction);
+    if (!this.transactionKeys.includes(transaction.Transaction)) {
+        this.transactions.push(transaction);
+        this.transactionKeys.push(transaction.Transaction);
+    }
   }
 
   static newInstance() {
