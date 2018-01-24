@@ -48,7 +48,7 @@ class Crawler {
     var transactionRows = await page.$$('#dvTable table tr');
 
     if (transactionRows.length) {
-      this.logger.log('debug', 'Tableau trouvé');
+      this.logger.log('debug', 'Grille de transactions trouvée');
 
       for (var i = 0; i < transactionRows.length; i++) {
 
@@ -73,22 +73,23 @@ class Crawler {
         }, row);
 
         if (transaction) {
-          this.logger.log('debug', 'Ajout transaction au stockage');
+          this.logger.log('debug', 'Ajout transaction "' + transaction.Transaction + '"');
           this.storage.addTransaction(transaction);
         }
 
       }
 
       if (transactionRows.length > 1) {
-        this.logger.log('debug', 'Prêt pour la page suivante');
+        this.logger.log('debug', 'OK pour ' + url + ' - page suivante');
         await page.close();
         this.crawl(this.completeUrl(this.targetUrl));
       } else {
         await page.close();
-        self.openThreads--;
-        if (self.openThreads == 0) {
-          self.logger.log('debug', 'Fin du script');
-          self.browser.close().then(function () {
+        this.openThreads--;
+        this.logger.log('debug', 'Plus de transactions disponibles');
+        if (this.openThreads == 0) {
+          this.logger.log('debug', 'Fin du script');
+          this.browser.close().then(function () {
             console.log(JSON.stringify(self.storage.getTransactions()));
           });
         }
