@@ -94,6 +94,10 @@ class Crawler {
         }
       }
 
+    } else {
+      this.logger.log('debug', 'Echec - nouvelle tentative pour ' + url);
+      await page.close();
+      this.crawl(url);
     }
 
   }
