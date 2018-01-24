@@ -4,7 +4,7 @@ class Crawler {
     this.browser = browser;
     this.storage = storage;
     this.logger = logger;
-    this.threads = 5;
+    this.threads = 10;
     this.openThreads = 0;
     this.offsetParam = 'start';
     this.step = 50;
