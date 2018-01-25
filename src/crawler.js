@@ -11,10 +11,10 @@ class Crawler {
 
     this.browser = browser;
     this.logger = logger;
-    this.storage = new Storage();
     this.maxThreads = 1;
     this.offsetParam = 'start';
     this.stepSize = 50;
+    this.storage = new Storage(this.stepSize);
 
     this.openThreads = 0;
     this.latestOffset = null;
@@ -97,7 +97,7 @@ class Crawler {
 
         if (transaction) {
           this.logger.log('debug', 'Ajout transaction "' + transaction.Transaction + '"');
-          this.storage.addTransaction(transaction);
+          this.storage.addTransaction(transaction, offset);
         }
 
       }
@@ -112,7 +112,7 @@ class Crawler {
 
         await page.close();
         this.openThreads--;
-        this.logger.log('debug', 'Plus de transactions disponibles');
+        this.logger.log('debug', 'Plus de transactions disponibles à l\'offset ' + offset);
 
         if (this.openThreads == 0) {
 
