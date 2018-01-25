@@ -17,6 +17,10 @@ Le paquet puppeteer se charge d'installer automatiquement une version de Chromiu
 
 Pour faciliter le débuggage et désactiver le mode headless, mettre la variable d'environnement `DISABLE_HEADLESS` à 1.
 
+## Configurer le nombre de threads
+
+Si le nombre de threads lancés par défaut ne convient pas, il suffit d'en indiquer le nombre souhaité dans la variable d'environnement `MAX_THREADS`.
+
 ## Logs
 
 Les logs sont écrits dans un fichier _debug.log_ durant l'exécution du script.

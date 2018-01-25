@@ -14,6 +14,10 @@ var headlessMode = true;
 if (process.env.hasOwnProperty('DISABLE_HEADLESS') && process.env.DISABLE_HEADLESS == 1) {
   headlessMode = false;
 }
+var maxThreads = 10;
+if (process.env.hasOwnProperty('MAX_THREADS')) {
+  maxThreads = process.env.MAX_THREADS;
+}
 
 logger.configure({
   transports: [
@@ -30,6 +34,7 @@ logger.level = 'debug';
   logger.log('debug', 'Démarrage du script');
   const browser = await puppeteer.launch({headless: headlessMode});
   const crawler = new Crawler(browser, logger);
+  crawler.setMaxThreads(maxThreads);
 
   crawler.run(targetUrl);
 

@@ -11,12 +11,17 @@ class Crawler {
     this.browser = browser;
     this.logger = logger;
     this.storage = new Storage();
-    this.threads = 10;
-    this.openThreads = 0;
+    this.maxThreads = 1;
     this.offsetParam = 'start';
     this.step = 50;
+
+    this.openThreads = 0;
     this.latestOffset = null;
     this.targetUrl = null;
+  }
+
+  setMaxThreads(maxThreads) {
+    this.maxThreads = parseInt(maxThreads);
   }
 
   nextOffset() {
@@ -33,8 +38,9 @@ class Crawler {
   }
 
   async run(targetUrl) {
+    this.logger.log('debug', 'Démarrage de ' + this.maxThreads + ' threads pour crawler ' + targetUrl);
     this.targetUrl = targetUrl;
-    for (let i = 0; i < this.threads; i++) {
+    for (let i = 0; i < this.maxThreads; i++) {
       this.openThreads++;
       this.crawl(this.completeUrl(this.targetUrl));
     }
