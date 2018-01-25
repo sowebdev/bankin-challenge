@@ -13,7 +13,7 @@ class Crawler {
     this.storage = new Storage();
     this.maxThreads = 1;
     this.offsetParam = 'start';
-    this.step = 50;
+    this.stepSize = 50;
 
     this.openThreads = 0;
     this.latestOffset = null;
@@ -28,7 +28,7 @@ class Crawler {
     if (this.latestOffset === null) {
         this.latestOffset = 0;
     } else {
-      this.latestOffset += this.step;
+      this.latestOffset += this.stepSize;
     }
     return this.latestOffset;
   }
