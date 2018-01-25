@@ -1,9 +1,16 @@
+const Storage = require('./storage.js');
+
+/**
+* Le crawler parcourt une URL cible et extrait toutes les transactions bancaires trouvées.
+* Afin d'accélérer son parcours, il crée un nombre défini de threads, chaque thread
+* étant responsable de l'analyse d'une page.
+**/
 class Crawler {
 
-  constructor(browser, storage, logger) {
+  constructor(browser, logger) {
     this.browser = browser;
-    this.storage = storage;
     this.logger = logger;
+    this.storage = new Storage();
     this.threads = 10;
     this.openThreads = 0;
     this.offsetParam = 'start';

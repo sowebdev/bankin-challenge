@@ -1,8 +1,11 @@
-class TransactionStorage {
+/**
+* Stockage des transactions
+*/
+class Storage {
 
   constructor() {
     this.transactions = [];
-    this.transactionKeys = [];
+    this.transactionIndex = [];
   }
 
   getTransactions() {
@@ -10,16 +13,13 @@ class TransactionStorage {
   }
 
   addTransaction(transaction) {
-    if (!this.transactionKeys.includes(transaction.Transaction)) {
+    // On s'assure qu'il n'y ait pas de transaction ajoutée en doublon
+    if (!this.transactionIndex.includes(transaction.Transaction)) {
         this.transactions.push(transaction);
-        this.transactionKeys.push(transaction.Transaction);
+        this.transactionIndex.push(transaction.Transaction);
     }
-  }
-
-  static newInstance() {
-    return new this;
   }
 
 };
 
-module.exports = TransactionStorage;
+module.exports = Storage;
