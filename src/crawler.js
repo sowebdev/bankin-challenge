@@ -8,6 +8,7 @@ const Storage = require('./storage.js');
 class Crawler {
 
   constructor(browser, logger) {
+
     this.browser = browser;
     this.logger = logger;
     this.storage = new Storage();
@@ -18,6 +19,7 @@ class Crawler {
     this.openThreads = 0;
     this.latestOffset = null;
     this.targetUrl = null;
+
   }
 
   setMaxThreads(maxThreads) {
@@ -25,30 +27,38 @@ class Crawler {
   }
 
   nextOffset() {
+
     if (this.latestOffset === null) {
         this.latestOffset = 0;
     } else {
       this.latestOffset += this.stepSize;
     }
+
     return this.latestOffset;
+
   }
 
-  completeUrl(url) {
-    return url + '?' + this.offsetParam + '=' + this.nextOffset();
+  completeUrl(url, offset) {
+    return url + '?' + this.offsetParam + '=' + offset;
   }
 
   async run(targetUrl) {
+
     this.logger.log('debug', 'Démarrage de ' + this.maxThreads + ' threads pour crawler ' + targetUrl);
     this.targetUrl = targetUrl;
+
     for (let i = 0; i < this.maxThreads; i++) {
       this.openThreads++;
-      this.crawl(this.completeUrl(this.targetUrl));
+      this.crawl(this.nextOffset());
     }
+
   }
 
-  async crawl(url) {
+  async crawl(offset) {
+
     const self = this;
     const page = await this.browser.newPage();
+    const url = this.completeUrl(this.targetUrl, offset);
 
     page.on('dialog', async dialog => {
       self.logger.log('debug', 'Apparition d\'un dialogue...fermeture');
@@ -93,25 +103,34 @@ class Crawler {
       }
 
       if (transactionRows.length > 1) {
+
         this.logger.log('debug', 'OK pour ' + url + ' - page suivante');
         await page.close();
-        this.crawl(this.completeUrl(this.targetUrl));
+        this.crawl(this.nextOffset());
+
       } else {
+
         await page.close();
         this.openThreads--;
         this.logger.log('debug', 'Plus de transactions disponibles');
+
         if (this.openThreads == 0) {
+
           this.logger.log('debug', 'Fin du script');
           this.browser.close().then(function () {
             console.log(JSON.stringify(self.storage.getTransactions()));
           });
+
         }
+
       }
 
     } else {
+
       this.logger.log('debug', 'Echec - nouvelle tentative pour ' + url);
       await page.close();
-      this.crawl(url);
+      this.crawl(offset);
+
     }
 
   }
